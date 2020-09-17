@@ -25,9 +25,9 @@ public class DrawPanel extends JPanel implements MouseMotionListener {
         gr.setColor(Color.WHITE);
         gr.fillRect(0, 0, getWidth(), getHeight());
         gr.setColor(Color.BLACK);
-       // LineDrawer ld = new DDALineDrawer(gr);
+        LineDrawer ld = new DDALineDrawer(gr);
         //LineDrawer ld = new BresenhamLineDrawer(gr);
-        LineDrawer ld = new WuLineDrawer(gr);
+        //LineDrawer ld = new WuLineDrawer(gr);
         //c помощью свич кейс создавать разные лд
         drawAll(ld);
         g.drawImage(bi, 0, 0, null);

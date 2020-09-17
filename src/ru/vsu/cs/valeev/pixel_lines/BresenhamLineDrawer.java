@@ -1,14 +1,13 @@
 package ru.vsu.cs.valeev.pixel_lines;
 
-import ru.vsu.cs.valeev.LineDrawer;
+import ru.vsu.cs.valeev.BaseLineDrawer;
 
 import java.awt.*;
 
-public class BresenhamLineDrawer implements LineDrawer {
-    private Graphics g;
+public class BresenhamLineDrawer extends BaseLineDrawer {
 
     public BresenhamLineDrawer(Graphics g) {
-        this.g = g;
+        super(g);
     }
 
     @Override
@@ -23,7 +22,7 @@ public class BresenhamLineDrawer implements LineDrawer {
         int e2;
 
         while (true) {
-            g.drawLine(x1, y1, x1, y1);
+            drawPixel(x1, y1);
 
             if (x1 == x2 || y1 == y2) break;
 

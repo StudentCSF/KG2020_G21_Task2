@@ -1,14 +1,13 @@
 package ru.vsu.cs.valeev.pixel_lines;
 
-import ru.vsu.cs.valeev.LineDrawer;
+import ru.vsu.cs.valeev.BaseLineDrawer;
 
 import java.awt.*;
 
-public class DDALineDrawer implements LineDrawer {
-    private Graphics g;
+public class DDALineDrawer extends BaseLineDrawer {
 
     public DDALineDrawer(Graphics g) {
-        this.g = g;
+        super(g);
     }
 
     @Override
@@ -23,7 +22,7 @@ public class DDALineDrawer implements LineDrawer {
             x += xs;
             y += ys;
 
-            this.g.drawLine(x, y, x, y );
+            drawPixel(x, y);
         }
     }
 }

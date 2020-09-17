@@ -1,14 +1,13 @@
 package ru.vsu.cs.valeev.pixel_lines;
 
-import ru.vsu.cs.valeev.LineDrawer;
+import ru.vsu.cs.valeev.BaseLineDrawer;
 
 import java.awt.*;
 
-public class WuLineDrawer implements LineDrawer {
-    private Graphics g;
+public class WuLineDrawer extends BaseLineDrawer {
 
     public WuLineDrawer(Graphics g) {
-        this.g = g;
+        super(g);
     }
 
     @Override
@@ -25,39 +24,39 @@ public class WuLineDrawer implements LineDrawer {
         int dy = y2 - y1;
 
         if (dx == 0 || dy == 0) {
-            this.g.setColor(Color.BLACK);
-            this.g.drawLine(x1, y1, x2, y2);
+            g.setColor(Color.BLACK);
+            drawPixel(x1, y1);
             return;
         }
         float gradient = 0;
         if (dx > dy) {
             gradient = (float) dy / dx;
             float intery = y1 + gradient;
-            this.g.setColor(Color.BLACK);
-            this.g.drawLine(x1, y1, x1, y1);
+            g.setColor(Color.BLACK);
+            drawPixel(x1, y1);
             for (int x = x1; x < x2; ++x) {
-                this.g.setColor(new Color(0, 0, 0, (int) (255 - fractionalPart(intery) * 255))); //Меняем прозрачность
-                this.g.drawLine(x, (int) intery, x, (int) intery);
-                this.g.setColor(new Color(0, 0, 0, (int) (fractionalPart(intery) * 255)));
-                this.g.drawLine(x, (int) intery + 1, x, (int) intery + 1);
+                g.setColor(new Color(0, 0, 0, (int) (255 - fractionalPart(intery) * 255))); //Меняем прозрачность
+                drawPixel(x, (int) intery);
+                g.setColor(new Color(0, 0, 0, (int) (fractionalPart(intery) * 255)));
+                drawPixel(x, (int) intery + 1);
                 intery += gradient;
             }
-            this.g.setColor(Color.BLACK);
-            this.g.drawLine(x2, y2, x2, y2);
+            g.setColor(Color.BLACK);
+            drawPixel(x2, y2);
         } else {
             gradient = (float) dx / dy;
             float interx = x1 + gradient;
-            this.g.setColor(Color.BLACK);
-            this.g.drawLine(x1, y1, x1, y1);
+            g.setColor(Color.BLACK);
+            drawPixel(x1, y1);
             for (int y = y1; y < y2; ++y) {
-                this.g.setColor(new Color(0, 0, 0, (int) (255 - fractionalPart(interx) * 255)));
-                this.g.drawLine((int) interx, y, (int) interx, y);
-                this.g.setColor(new Color(0, 0, 0, (int) (fractionalPart(interx) * 255)));
-                this.g.drawLine((int) interx + 1, y, (int) interx + 1, y);
+                g.setColor(new Color(0, 0, 0, (int) (255 - fractionalPart(interx) * 255)));
+                drawPixel((int) interx, y);
+                g.setColor(new Color(0, 0, 0, (int) (fractionalPart(interx) * 255)));
+                drawPixel((int) interx + 1, y);
                 interx += gradient;
             }
-            this.g.setColor(Color.BLACK);
-            this.g.drawLine(x2, y2, x2, y2);
+            g.setColor(Color.BLACK);
+            drawPixel(x2, y2);
         }
     }
 
