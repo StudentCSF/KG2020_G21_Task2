@@ -25,10 +25,11 @@ public class DrawPanel extends JPanel implements MouseMotionListener {
         gr.setColor(Color.WHITE);
         gr.fillRect(0, 0, getWidth(), getHeight());
         gr.setColor(Color.BLACK);
+
         LineDrawer ld = new DDALineDrawer(gr);
         //LineDrawer ld = new BresenhamLineDrawer(gr);
         //LineDrawer ld = new WuLineDrawer(gr);
-        //c помощью свич кейс создавать разные лд
+
         drawAll(ld);
         g.drawImage(bi, 0, 0, null);
         gr.dispose();
@@ -36,17 +37,19 @@ public class DrawPanel extends JPanel implements MouseMotionListener {
 
     public static void drawSnowflake(LineDrawer ld, int x, int y, int r, int n) {
         double da = 2 * Math.PI / n;
+
+        double a, dx, dy;
         for (int i = 0; i < n; i++) {
-            double a = da * i;
-            double dx = Math.cos(a) * r;
-            double dy = Math.sin(a) * r;
+            a = da * i;
+            dx = Math.cos(a) * r;
+            dy = Math.sin(a) * r;
             ld.drawLine(x, y, x + (int) dx, y + (int) dy);
         }
     }
 
     private void drawAll(LineDrawer ld) {
         drawSnowflake(ld, 100, 100, 50, 12);
-        ld.drawLine(getWidth() / 2, getHeight() / 2, (int)this.position.getX(), (int)this.position.getY());
+        //ld.drawLine(getWidth() / 2, getHeight() / 2, (int)this.position.getX(), (int)this.position.getY());
     }
 
     @Override

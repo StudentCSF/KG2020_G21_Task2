@@ -13,16 +13,21 @@ public class DDALineDrawer extends BaseLineDrawer {
     @Override
     public void drawLine(int x1, int y1, int x2, int y2) {
         int l = Math.max(Math.abs(x2 - x1), Math.abs(y2 - y1));
-        int xs = (x2 - x1) / l;
-        int ys = (y2 - y1) / l;
 
-        int x = x1;
-        int y = y1;
-        for (int i = 0; i < l; i++) {
-            x += xs;
-            y += ys;
+        drawPixel(x1, y1);
 
-            drawPixel(x, y);
+        if (l > 0) {
+            int xs = (x2 - x1) / l;
+            int ys = (y2 - y1) / l;
+
+            int x = x1;
+            int y = y1;
+
+            for (int i = 0; i < l; i++) {
+                x += xs;
+                y += ys;
+                drawPixel(x, y);
+            }
         }
     }
 }
