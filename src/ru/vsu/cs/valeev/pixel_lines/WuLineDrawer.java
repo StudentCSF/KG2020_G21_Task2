@@ -1,13 +1,15 @@
 package ru.vsu.cs.valeev.pixel_lines;
 
 import ru.vsu.cs.valeev.LineDrawer;
+import ru.vsu.cs.valeev.PixelDrawer;
 
 import java.awt.*;
 
-public class WuLineDrawer /*implements LineDrawer*/ {
-/*
-    public WuLineDrawer(Graphics g) {
-        super(g);
+public class WuLineDrawer implements LineDrawer {
+    private PixelDrawer pd;
+
+    public WuLineDrawer(PixelDrawer pd) {
+        this.pd = pd;
     }
 
     @Override
@@ -24,44 +26,35 @@ public class WuLineDrawer /*implements LineDrawer*/ {
         int dy = y2 - y1;
 
         if (dx == 0 || dy == 0) {
-            g.setColor(Color.BLACK);
-            drawPixel(x1, y1);
+            pd.drawPixel(x1, y1, Color.BLACK);
             return;
         }
         float gradient = 0;
         if (dx > dy) {
             gradient = (float) dy / dx;
             float intery = y1 + gradient;
-            g.setColor(Color.BLACK);
-            drawPixel(x1, y1);
+            pd.drawPixel(x1, y1, Color.BLACK);
             for (int x = x1; x < x2; ++x) {
-                g.setColor(new Color(0, 0, 0, (int) (255 - fractionalPart(intery) * 255))); //Меняем прозрачность
-                drawPixel(x, (int) intery);
-                g.setColor(new Color(0, 0, 0, (int) (fractionalPart(intery) * 255)));
-                drawPixel(x, (int) intery + 1);
+                pd.drawPixel(x, (int) intery, new Color(0, 0, 0, (int) (255 - fractionalPart(intery) * 255)));
+                pd.drawPixel(x, (int) intery + 1, new Color(0, 0, 0, (int) (fractionalPart(intery) * 255)));
                 intery += gradient;
             }
-            g.setColor(Color.BLACK);
-            drawPixel(x2, y2);
+            pd.drawPixel(x2, y2, Color.BLACK);
         } else {
             gradient = (float) dx / dy;
             float interx = x1 + gradient;
-            g.setColor(Color.BLACK);
-            drawPixel(x1, y1);
+            pd.drawPixel(x1, y1, Color.BLACK);
             for (int y = y1; y < y2; ++y) {
-                g.setColor(new Color(0, 0, 0, (int) (255 - fractionalPart(interx) * 255)));
-                drawPixel((int) interx, y);
-                g.setColor(new Color(0, 0, 0, (int) (fractionalPart(interx) * 255)));
-                drawPixel((int) interx + 1, y);
+                pd.drawPixel((int) interx, y, new Color(0, 0, 0, (int) (255 - fractionalPart(interx) * 255)));
+                pd.drawPixel((int) interx + 1, y, new Color(0, 0, 0, (int) (fractionalPart(interx) * 255)));
                 interx += gradient;
             }
-            g.setColor(Color.BLACK);
-            drawPixel(x2, y2);
+            pd.drawPixel(x2, y2, Color.BLACK);
         }
     }
 
     private float fractionalPart(float x) {
         int tmp = (int) x;
         return x - tmp;
-    }*/
+    }
 }
