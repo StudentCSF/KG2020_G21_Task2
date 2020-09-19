@@ -25,10 +25,28 @@ public class WuLineDrawer implements LineDrawer {
         int dx = x2 - x1;
         int dy = y2 - y1;
 
-        if (dx == 0 || dy == 0) {
-            pd.drawPixel(x1, y1, Color.BLACK);
+        if (dx == 0) {
+            if (dy < 0) {
+                y1 += y2;
+                y2 = y1 - y2;
+                y1 -= y2;
+            }
+            for (int i = y1; i < y2; i++) {
+                pd.drawPixel(x1, i, Color.RED);
+            }
+            return;
+        } else if (dy == 0) {
+            if (dx < 0) {
+                x1 += x2;
+                x2 = x1 - x2;
+                x1 -= x2;
+            }
+            for (int j = x1; j < x2; j++) {
+                pd.drawPixel(j, y1, Color.BLUE);
+            }
             return;
         }
+
         float gradient = 0;
         if (dx > dy) {
             gradient = (float) dy / dx;
