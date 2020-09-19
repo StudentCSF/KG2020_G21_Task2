@@ -1,32 +1,49 @@
 package ru.vsu.cs.valeev.pixel_lines;
 
-import ru.vsu.cs.valeev.BaseLineDrawer;
+import ru.vsu.cs.valeev.LineDrawer;
+import ru.vsu.cs.valeev.PixelDrawer;
 
 import java.awt.*;
 
-public class DDALineDrawer extends BaseLineDrawer {
+public class DDALineDrawer implements LineDrawer {
+    PixelDrawer pd;
 
-    public DDALineDrawer(Graphics g) {
-        super(g);
+    public DDALineDrawer(PixelDrawer pd) {
+        this.pd = pd;
     }
 
     @Override
     public void drawLine(int x1, int y1, int x2, int y2) {
-        int l = Math.max(Math.abs(x2 - x1), Math.abs(y2 - y1));
+        double dx = x2 - x1;
+        double dy = y2 - y1;
 
-        drawPixel(x1, y1);
-
-        if (l > 0) {
-            int xs = (x2 - x1) / l;
-            int ys = (y2 - y1) / l;
-
-            int x = x1;
-            int y = y1;
-
-            for (int i = 0; i < l; i++) {
-                x += xs;
-                y += ys;
-                drawPixel(x, y);
+        if (Math.abs(dx) > Math.abs(dy)) {
+            if (x1 > x2) {
+                int tmp = x2;
+                x2 = x1;
+                x1 = tmp;
+                tmp = y2;
+                y2 = y1;
+                y1 = tmp;
+            }
+            double k = dy / dx;
+            for (int j = x1; j <= x2; j++) {
+                double i = k * (j - x1) + y1;
+                this.pd.drawPixel(j, (int) i, Color.RED);
+            }
+        } else {
+            if (y1 > y2) {
+                int tmp = x2;
+                x2 = x1;
+                x1 = tmp;
+                tmp = y2;
+                y2 = y1;
+                y1 = tmp;
+            }
+            double k = dx / dy;
+            for (int i = y1; i <= y2; i++) {
+                double j = k * (i - y1) + x1;
+                this.pd.drawPixel((int) j, i, Color.blue);
             }
         }
     }

@@ -1,11 +1,11 @@
 package ru.vsu.cs.valeev.pixel_lines;
 
-import ru.vsu.cs.valeev.BaseLineDrawer;
+import ru.vsu.cs.valeev.LineDrawer;
 
 import java.awt.*;
 
-public class WuLineDrawer extends BaseLineDrawer {
-
+public class WuLineDrawer /*implements LineDrawer*/ {
+/*
     public WuLineDrawer(Graphics g) {
         super(g);
     }
@@ -63,5 +63,5 @@ public class WuLineDrawer extends BaseLineDrawer {
     private float fractionalPart(float x) {
         int tmp = (int) x;
         return x - tmp;
-    }
+    }*/
 }
