@@ -1,8 +1,10 @@
 package ru.vsu.cs.valeev.pixel_lines;
 
+import ru.vsu.cs.valeev.pixel_lines.PixelDrawer;
+
 import java.awt.*;
 
-public class GraphicsPixelDrawer implements  PixelDrawer {
+public class GraphicsPixelDrawer implements PixelDrawer {
     private Graphics g;
 
     public GraphicsPixelDrawer(Graphics g) {
@@ -11,11 +13,12 @@ public class GraphicsPixelDrawer implements  PixelDrawer {
 
     @Override
     public void drawPixel(int x, int y, Color c) {
-        this.g.setColor(c);
-        g.fillRect(x, y, 1, 1);
+        g.setColor(c);
+        this.g.fillRect(x, y, 1, 1);
     }
 
-    public Graphics getG() {
-        return g;
+    @Override
+    public void drawPixel(int x, int y) {
+        this.g.fillRect(x, y, 1, 1);
     }
 }

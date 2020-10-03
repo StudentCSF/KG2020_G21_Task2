@@ -1,7 +1,5 @@
 package ru.vsu.cs.valeev.pixel_lines;
 
-import ru.vsu.cs.valeev.LineDrawer;
-
 import java.awt.*;
 
 public class GraphicsLineDrawer implements LineDrawer {

@@ -1,7 +1,8 @@
 package ru.vsu.cs.valeev;
 
-import ru.vsu.cs.valeev.pixel_lines.BresenhamLineDrawer;
-import ru.vsu.cs.valeev.pixel_lines.DDALineDrawer;
+import ru.vsu.cs.valeev.pixel_lines.GraphicsPixelDrawer;
+import ru.vsu.cs.valeev.pixel_lines.LineDrawer;
+import ru.vsu.cs.valeev.pixel_lines.PixelDrawer;
 import ru.vsu.cs.valeev.pixel_lines.WuLineDrawer;
 
 import javax.swing.*;
