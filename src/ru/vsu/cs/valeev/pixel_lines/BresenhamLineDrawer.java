@@ -1,8 +1,5 @@
 package ru.vsu.cs.valeev.pixel_lines;
 
-import ru.vsu.cs.valeev.LineDrawer;
-import ru.vsu.cs.valeev.PixelDrawer;
-
 import java.awt.*;
 
 public class BresenhamLineDrawer implements LineDrawer {
@@ -13,42 +10,31 @@ public class BresenhamLineDrawer implements LineDrawer {
     }
 
     @Override
-    public void drawLine(int x1, int y1, int x2, int y2) {
+    public void drawLine(final int x1, final int y1, final int x2, final int y2) {
         int x = x1;
         int y = y1;
 
-        int dx = Math.abs(x2 - x1);
-        int dy = Math.abs(y2 - y1);
+        int dx = x2 - x1;
+        int dy = y2 - y1;
 
-        double sx = Math.signum(x2 - x1);
-        double sy = Math.signum(y2 - y1);
+        int xs = x1 < x2 ? 1 : -1;
+        int ys = y1 < y2 ? 1 : -1;
 
-        int e = 2 * dy - dx;
+        int e = 2 * dx - dy;
+        int i = dx;
 
-        boolean flag;
-        if (flag = dy > dx) {
-            int tmp = dx;
-            dx = dy;
-            dy = tmp;
-        }
+        pd.drawPixel(x, y, Color.BLACK);
 
-        for (int i = 1; i < dx; i++) {
-            this.pd.drawPixel(x, y, Color.RED);
-            
-            while (e >= 0) {
-                if (flag) {
-                    x += sx;
-                } else {
-                    y += sy;
-                }
-                e -= 2 * dx;
-            }
-            if (flag) {
-                y += sy;
-            } else {
-                x += sx;
-            }
-            e += 2 * dy;
+        while (i-- > 0) {
+           if (e >= 0) {
+               x++;
+               y++;
+               e += 2 * (dx + dy);
+           } else {
+               x++;
+               e += 2 * dy;
+           }
+           pd.drawPixel(x, y, Color.BLACK);
         }
     }
 }
