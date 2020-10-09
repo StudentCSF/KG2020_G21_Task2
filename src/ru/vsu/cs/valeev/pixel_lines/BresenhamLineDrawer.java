@@ -54,4 +54,8 @@ public class BresenhamLineDrawer implements LineDrawer {
             pd.drawPixel(x, y);
         }
     }
+
+    public void drawOval(int x, int y, int a, int b) {
+
+    }
 }
