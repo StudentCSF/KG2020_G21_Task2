@@ -1,9 +1,6 @@
 package ru.vsu.cs.valeev;
 
-import ru.vsu.cs.valeev.pixel_lines.GraphicsPixelDrawer;
-import ru.vsu.cs.valeev.pixel_lines.LineDrawer;
-import ru.vsu.cs.valeev.pixel_lines.PixelDrawer;
-import ru.vsu.cs.valeev.pixel_lines.WuLineDrawer;
+import ru.vsu.cs.valeev.pixel_lines.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,8 +27,8 @@ public class DrawPanel extends JPanel implements MouseMotionListener {
         PixelDrawer pd = new GraphicsPixelDrawer(gr);
 
         //LineDrawer ld = new DDALineDrawer(pd);
-        //LineDrawer ld = new BresenhamLineDrawer(pd);
-        LineDrawer ld = new WuLineDrawer(pd);
+        LineDrawer ld = new BresenhamLineDrawer(pd);
+        //LineDrawer ld = new WuLineDrawer(pd);
         drawAll(ld);
         g.drawImage(bi, 0, 0, null);
         gr.dispose();

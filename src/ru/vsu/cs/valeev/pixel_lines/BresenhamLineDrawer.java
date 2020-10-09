@@ -14,27 +14,44 @@ public class BresenhamLineDrawer implements LineDrawer {
         int x = x1;
         int y = y1;
 
-        int dx = x2 - x1;
-        int dy = y2 - y1;
+        int dx = Math.abs(x2 - x1);
+        int dy = Math.abs(y2 - y1);
 
         int xs = x1 < x2 ? 1 : -1;
         int ys = y1 < y2 ? 1 : -1;
 
-        int e = 2 * dx - dy;
-        int i = dx;
+        int swap = 0;
 
-        pd.drawPixel(x, y, Color.BLACK);
+        int c;
+        if ((c = dx) < dy) {
+            swap++;
+            c = dy;
+            dy = dx;
+            dx = c;
+        }
 
-        while (i-- > 0) {
-           if (e >= 0) {
-               x++;
-               y++;
-               e += 2 * (dx + dy);
-           } else {
-               x++;
-               e += 2 * dy;
-           }
-           pd.drawPixel(x, y, Color.BLACK);
+        int i1 = 2 * dy;
+        int s = i1 - dx;
+        int i2 = 2 * dx;
+
+        pd.drawPixel(x, y);
+
+        while (--c >= 0) {
+            if (s >= 0) {
+                if (swap != 0) {
+                    x += xs;
+                } else {
+                    y += ys;
+                }
+                s -= i2;
+            }
+            if (swap != 0) {
+                y += ys;
+            } else {
+                x += xs;
+            }
+            s += i1;
+            pd.drawPixel(x, y);
         }
     }
 }
