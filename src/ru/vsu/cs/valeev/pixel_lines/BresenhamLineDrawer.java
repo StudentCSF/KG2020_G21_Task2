@@ -10,7 +10,7 @@ public class BresenhamLineDrawer implements LineDrawer {
     }
 
     @Override
-    public void drawLine(final int x1, final int y1, final int x2, final int y2) {
+    public void drawLine(final int x1, final int y1, final int x2, final int y2, Color color) {
         int x = x1;
         int y = y1;
 
@@ -34,7 +34,7 @@ public class BresenhamLineDrawer implements LineDrawer {
         int s = i1 - dx;
         int i2 = 2 * dx;
 
-        pd.drawPixel(x, y);
+        pd.colorPixel(x, y);
 
         while (--c >= 0) {
             if (s >= 0) {
@@ -51,8 +51,13 @@ public class BresenhamLineDrawer implements LineDrawer {
                 x += xs;
             }
             s += i1;
-            pd.drawPixel(x, y);
+            pd.colorPixel(x, y);
         }
+    }
+
+    @Override
+    public void drawLine(int x1, int y1, int x2, int y2) {
+        drawLine(x1, y1, x2, y2, Color.BLACK);
     }
 
     public void drawOval(int x, int y, int a, int b) {

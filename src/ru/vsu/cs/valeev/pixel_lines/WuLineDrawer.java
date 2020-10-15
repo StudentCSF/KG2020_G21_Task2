@@ -3,73 +3,76 @@ package ru.vsu.cs.valeev.pixel_lines;
 import java.awt.*;
 
 public class WuLineDrawer implements LineDrawer {
-    private PixelDrawer pd;
+    private PixelDrawer pixelDrawer;
 
     public WuLineDrawer(PixelDrawer pd) {
-        this.pd = pd;
+        this.pixelDrawer = pd;
+    }
+
+    @Override
+    public void drawLine(int x1, int y1, int x2, int y2, Color color) {
+        boolean isLineVerticallyOriented = Math.abs(y2 - y1) > Math.abs(x2 - x1);
+        if (isLineVerticallyOriented) {
+            int temp = y1;
+            y1 = x1;
+            x1 = temp;
+            temp = y2;
+            y2 = x2;
+            x2 = temp;
+        }
+        if (x1 > x2) {
+            int temp = y2;
+            y2 = y1;
+            y1 = temp;
+            temp = x2;
+            x2 = x1;
+            x1 = temp;
+        }
+        if (isLineVerticallyOriented) {
+            pixelDrawer.colorPixel(y1, x1, color);
+            pixelDrawer.colorPixel(y2, x2, color);
+        } else {
+            pixelDrawer.colorPixel(x1, y1, color);
+            pixelDrawer.colorPixel(x2, y2, color);
+        }
+        double dx = x2 - x1;
+        double dy = y2 - y1;
+        double slopeCoefficient = dy / dx;
+        double y = y1 + slopeCoefficient;
+        for (int x = x1 + 1; x <= x2 - 1; x++) {
+            Color tmp1 = new Color(
+                    color.getRed(),
+                    color.getGreen(),
+                    color.getBlue(),
+                    (int) (255 * (1 - y + (int) y))
+            );
+            Color tmp2 = new Color(
+                    color.getRed(),
+                    color.getGreen(),
+                    color.getBlue(),
+                    (int) (255 * (y - (int) y))
+            );
+            if (isLineVerticallyOriented) {
+                pixelDrawer.colorPixel(
+                        (int) y,
+                        x, tmp1);
+                pixelDrawer.colorPixel(
+                        (int) y + 1,
+                        x, tmp2);
+            } else {
+                pixelDrawer.colorPixel(
+                        x,
+                        (int) y, tmp1);
+                pixelDrawer.colorPixel(
+                        x,
+                        (int) y + 1, tmp2);
+            }
+            y += slopeCoefficient;
+        }
     }
 
     @Override
     public void drawLine(int x1, int y1, int x2, int y2) {
-        if (x2 < x1) {
-            x1 += x2;
-            x2 = x1 - x2;
-            x1 -= x2;
-            y1 += y2;
-            y2 = y1 - y2;
-            y1 -= y2;
-        }
-        int dx = x2 - x1;
-        int dy = y2 - y1;
-
-        if (dx == 0) {
-            if (dy < 0) {
-                y1 += y2;
-                y2 = y1 - y2;
-                y1 -= y2;
-            }
-            for (int i = y1; i < y2; i++) {
-                pd.drawPixel(x1, i, Color.RED);
-            }
-            return;
-        } else if (dy == 0) {
-            if (dx < 0) {
-                x1 += x2;
-                x2 = x1 - x2;
-                x1 -= x2;
-            }
-            for (int j = x1; j < x2; j++) {
-                pd.drawPixel(j, y1, Color.BLUE);
-            }
-            return;
-        }
-
-        float gradient = 0;
-        if (dx > dy) {
-            gradient = (float) dy / dx;
-            float intery = y1 + gradient;
-            pd.drawPixel(x1, y1, Color.BLACK);
-            for (int x = x1; x < x2; ++x) {
-                pd.drawPixel(x, (int) intery, new Color(0, 0, 0, (int) (255 - fractionalPart(intery) * 255)));
-                pd.drawPixel(x, (int) intery + 1, new Color(0, 0, 0, (int) (fractionalPart(intery) * 255)));
-                intery += gradient;
-            }
-            pd.drawPixel(x2, y2, Color.BLACK);
-        } else {
-            gradient = (float) dx / dy;
-            float interx = x1 + gradient;
-            pd.drawPixel(x1, y1, Color.BLACK);
-            for (int y = y1; y < y2; ++y) {
-                pd.drawPixel((int) interx, y, new Color(0, 0, 0, (int) (255 - fractionalPart(interx) * 255)));
-                pd.drawPixel((int) interx + 1, y, new Color(0, 0, 0, (int) (fractionalPart(interx) * 255)));
-                interx += gradient;
-            }
-            pd.drawPixel(x2, y2, Color.BLACK);
-        }
-    }
-
-    private float fractionalPart(float x) {
-        int tmp = (int) x;
-        return x - tmp;
+        drawLine(x1, y1, x2, y2, Color.BLACK);
     }
 }
