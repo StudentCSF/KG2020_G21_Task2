@@ -46,9 +46,18 @@ public class DrawPanel extends JPanel implements MouseMotionListener {
         ArcDrawer adp = new BresenhamPieDrawer(pd, ld);
 //        adb.drawArc(300, 300, 100, 100, 180, 190);
 //        adb.draw(500, 300, 400, 100, 350, 360);
-//        testQuarters(adp);
-        testAlmostCircles(adp);
-//        testMiniPies(adp);
+
+        /**
+         * tests below, launch only any one, else will be kasha
+         */
+
+//        testQuarters(adb);
+//        testAlmostCircles(adp);
+        testMiniPies(adp);
+
+
+
+//        adp.draw(300, 300, 100, 100, 315, 360);
 //        add.draw(300, 300, 100, 100, -180, 0);
 //        gr.drawArc(200, 200, 100, 100, 0, 180);
 //        ld.drawLine(300, 300, 400, 300);
@@ -69,15 +78,15 @@ public class DrawPanel extends JPanel implements MouseMotionListener {
     }
 
     private static void testMiniPies(ArcDrawer ad) {
-        int angle = 10;
+        int angle = 3;
         Random rnd = new Random();
         int a = 100, b = 100;
         int start = rnd.nextInt(360 - angle);
-//        ad.draw(200, 200, a, b, start, start + angle);
-//        start = rnd.nextInt(360 - angle);
-//        ad.draw(200, 400, a, b, start, start + angle);
-//        start = rnd.nextInt(360 - angle);
-//        ad.draw(400, 200, a, b, start, start + angle);
+        ad.draw(200, 200, a, b, start, start + angle);
+        start = rnd.nextInt(360 - angle);
+        ad.draw(200, 400, a, b, start, start + angle);
+        start = rnd.nextInt(360 - angle);
+        ad.draw(400, 200, a, b, start, start + angle);
         start = rnd.nextInt(360 - angle);
         ad.draw(400, 400, a, b, start, start + angle);
     }
