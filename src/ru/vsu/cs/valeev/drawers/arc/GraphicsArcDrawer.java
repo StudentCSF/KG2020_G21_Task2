@@ -10,7 +10,7 @@ public class GraphicsArcDrawer implements ArcDrawer {
     }
 
     @Override
-    public void drawArc(int centerX, int centerY, int width, int height, int startAngle, int endAngle, Color c) {
+    public void draw(int centerX, int centerY, int width, int height, int startAngle, int endAngle, Color c) {
         g.setColor(c);
         g.drawArc(centerX - width, centerY - height, 2 * width, 2 * height, startAngle, endAngle);
     }

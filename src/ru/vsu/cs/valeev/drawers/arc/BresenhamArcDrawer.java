@@ -2,18 +2,17 @@ package ru.vsu.cs.valeev.drawers.arc;
 
 import ru.vsu.cs.valeev.drawers.pixel.PixelDrawer;
 
-import javax.swing.plaf.ColorUIResource;
 import java.awt.*;
 
 public class BresenhamArcDrawer implements ArcDrawer {
-    PixelDrawer pd;
+    private PixelDrawer pd;
 
     public BresenhamArcDrawer(PixelDrawer pd) {
         this.pd = pd;
     }
 
     @Override
-    public void drawArc(int centerX, int centerY, int width, int height, int startAngle, int endAngle, Color c) {
+    public void draw(int centerX, int centerY, int width, int height, int startAngle, int endAngle, Color c) {
         double radStartAngle = (float) startAngle / 180 * Math.PI;
         double radEndAngle = (float) endAngle / 180 * Math.PI;
         int doubleASqr = 2 * width * width;
@@ -27,7 +26,7 @@ public class BresenhamArcDrawer implements ArcDrawer {
         int stopY = 0;
 
         while (stopX >= stopY) {
-            draw(centerX, centerY, x, y, radStartAngle, radEndAngle, c);
+            colorPixels(centerX, centerY, x, y, radStartAngle, radEndAngle, c);
             y++;
             stopY += doubleASqr;
             error += yChg;
@@ -49,7 +48,7 @@ public class BresenhamArcDrawer implements ArcDrawer {
         stopY = doubleASqr * height;
 
         while (stopX <= stopY) {
-            draw(centerX, centerY, x, y, radStartAngle, radEndAngle, c);
+            colorPixels(centerX, centerY, x, y, radStartAngle, radEndAngle, c);
             x++;
             stopX += doubleBSqr;
             error += xChg;
@@ -63,26 +62,26 @@ public class BresenhamArcDrawer implements ArcDrawer {
         }
     }
 
-    private void draw(final int cx, final int cy, final int x, final int y, final double startAngle, final double endAngle, Color c) {
-        int rx = cx + x;
-        int ry = cy + y;
-        double angle = Math.atan2(x, y) + 1.5 * Math.PI;
-        if (angle >= startAngle && angle <= endAngle)
-            pd.colorPixel(rx, ry, Color.RED);
-        rx = cx + x;
-        ry = cy - y;
-        angle = Math.atan2(-y, x);
-        if (-angle >= startAngle && -angle <= endAngle)
-            pd.colorPixel(rx, ry, Color.BLUE);
-        rx = cx - x;
-        ry = cy - y;
-        angle = Math.atan2(-y, -x);
-        if (-angle >= startAngle && -angle <= endAngle)
-            pd.colorPixel(rx, ry, Color.RED);
-        rx = cx - x;
-        ry = cy + y;
-        angle = Math.atan2(x, -y) + 0.5 * Math.PI;
-        if (angle >= startAngle && angle <= endAngle)
-            pd.colorPixel(rx, ry, Color.BLUE);
+    protected void colorPixels(final int cx, final int cy, final int dx, final int dy, final double sa, final double ea, Color c) {
+        int rx = cx + dx;
+        int ry = cy + dy;
+        double angle = Math.atan2(dx, dy) + 1.5 * Math.PI;
+        if (angle >= sa && angle <= ea)
+            pd.colorPixel(rx, ry, c);
+        rx = cx + dx;
+        ry = cy - dy;
+        angle = Math.atan2(-dy, dx);
+        if (-angle >= sa && -angle <= ea)
+            pd.colorPixel(rx, ry, c);
+        rx = cx - dx;
+        ry = cy - dy;
+        angle = Math.atan2(-dy, -dx);
+        if (-angle >= sa && -angle <= ea)
+            pd.colorPixel(rx, ry, c);
+        rx = cx - dx;
+        ry = cy + dy;
+        angle = Math.atan2(dx, -dy) + 0.5 * Math.PI;
+        if (angle >= sa && angle <= ea)
+            pd.colorPixel(rx, ry, c);
     }
 }
