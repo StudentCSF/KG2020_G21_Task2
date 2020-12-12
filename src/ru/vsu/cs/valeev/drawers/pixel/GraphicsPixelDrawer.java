@@ -1,6 +1,6 @@
-package ru.vsu.cs.valeev.pixel_lines;
+package ru.vsu.cs.valeev.drawers.pixel;
 
-import ru.vsu.cs.valeev.pixel_lines.PixelDrawer;
+import ru.vsu.cs.valeev.drawers.pixel.PixelDrawer;
 
 import java.awt.*;
 

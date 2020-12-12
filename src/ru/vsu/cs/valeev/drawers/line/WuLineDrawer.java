@@ -1,4 +1,6 @@
-package ru.vsu.cs.valeev.pixel_lines;
+package ru.vsu.cs.valeev.drawers.line;
+
+import ru.vsu.cs.valeev.drawers.pixel.PixelDrawer;
 
 import java.awt.*;
 
@@ -37,9 +39,9 @@ public class WuLineDrawer implements LineDrawer {
         }
         double dx = x2 - x1;
         double dy = y2 - y1;
-        double slopeCoefficient = dy / dx;
-        double y = y1 + slopeCoefficient;
-        for (int x = x1 + 1; x <= x2 - 1; x++) {
+        double k = dy / dx;
+        double y = y1 + k;
+        for (int x = x1 + 1; x < x2; x++) {
             Color tmp1 = new Color(
                     color.getRed(),
                     color.getGreen(),
@@ -67,7 +69,7 @@ public class WuLineDrawer implements LineDrawer {
                         x,
                         (int) y + 1, tmp2);
             }
-            y += slopeCoefficient;
+            y += k;
         }
     }
 

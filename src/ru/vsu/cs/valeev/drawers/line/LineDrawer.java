@@ -1,4 +1,4 @@
-package ru.vsu.cs.valeev.pixel_lines;
+package ru.vsu.cs.valeev.drawers.line;
 
 import java.awt.*;
 

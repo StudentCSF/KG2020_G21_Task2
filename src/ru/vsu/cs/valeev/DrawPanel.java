@@ -1,6 +1,14 @@
 package ru.vsu.cs.valeev;
 
-import ru.vsu.cs.valeev.pixel_lines.*;
+import ru.vsu.cs.valeev.drawers.arc.ArcDrawer;
+import ru.vsu.cs.valeev.drawers.arc.BresenhamArcDrawer;
+import ru.vsu.cs.valeev.drawers.arc.GraphicsArcDrawer;
+import ru.vsu.cs.valeev.drawers.arc.GraphicsArcFiller;
+import ru.vsu.cs.valeev.drawers.line.BresenhamLineDrawer;
+import ru.vsu.cs.valeev.drawers.line.LineDrawer;
+import ru.vsu.cs.valeev.drawers.line.MyBresenhamLineDrawer;
+import ru.vsu.cs.valeev.drawers.pixel.GraphicsPixelDrawer;
+import ru.vsu.cs.valeev.drawers.pixel.PixelDrawer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,10 +34,19 @@ public class DrawPanel extends JPanel implements MouseMotionListener {
 
         PixelDrawer pd = new GraphicsPixelDrawer(gr);
 
-        //LineDrawer ld = new DDALineDrawer(pd);
-        //LineDrawer ld = new BresenhamLineDrawer(pd);
-        LineDrawer ld = new WuLineDrawer(pd);
-        drawAll(ld);
+//        LineDrawer ld = new GraphicsLineDrawer(gr);
+//        LineDrawer ld = new DDALineDrawer(pd);
+        LineDrawer ld = new BresenhamLineDrawer(pd);
+//        LineDrawer ld = new MyBresenhamLineDrawer(pd);
+//        LineDrawer ld = new WuLineDrawer(pd);
+//        drawAll(ld);
+//        ArcDrawer adf = new GraphicsArcFiller(gr);
+        ArcDrawer add = new GraphicsArcDrawer(gr);
+        ArcDrawer adb = new BresenhamArcDrawer(pd);
+//        adb.drawArc(300, 300, 100, 100, 180, 190);
+        adb.drawArc(300, 300, 100, 100, 350, 360);
+//        add.drawArc(300, 300, 100, 100, 270, 280);
+//        ld.drawLine(300, 300, 400, 300);
         g.drawImage(bi, 0, 0, null);
         gr.dispose();
     }
@@ -47,8 +64,8 @@ public class DrawPanel extends JPanel implements MouseMotionListener {
     }
 
     private void drawAll(LineDrawer ld) {
-        drawSnowflake(ld, 100, 100, 50, 12);
-        ld.drawLine(getWidth() / 2, getHeight() / 2, (int) this.position.getX(), (int) this.position.getY());
+        drawSnowflake(ld, 1000, 500, 20, 40);
+        ld.drawLine(getWidth() / 3, getHeight() / 3, (int) this.position.getX(), (int) this.position.getY());
     }
 
     @Override
@@ -58,7 +75,7 @@ public class DrawPanel extends JPanel implements MouseMotionListener {
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        this.position = new Point(e.getX(), e.getY());
-        repaint();
+//        this.position = new Point(e.getX(), e.getY());
+//        repaint();
     }
 }
