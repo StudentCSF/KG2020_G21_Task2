@@ -107,7 +107,7 @@ public class BresenhamPieDrawer implements ArcDrawer {
 
         rx = cx + dx;
         ry = cy - dy;
-        if (octas[i] == 2) pd.colorPixel(rx, ry, c);
+        if (octas[i] == 2) colorPixel(rx, ry, c, -1, pts, minax);
         else if (octas[i] == 1) {
             angle = -1 * Math.atan2(-dy, dx);
             if (angle >= sa && angle <= ea) {
