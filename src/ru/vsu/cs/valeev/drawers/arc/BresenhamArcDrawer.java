@@ -12,20 +12,20 @@ public class BresenhamArcDrawer implements ArcDrawer {
     }
 
     @Override
-    public void draw(int centerX, int centerY, int width, int height, int startAngle, int endAngle, Color c) {
+    public void draw(int centerX, int centerY, int xRadius, int yRadius, int startAngle, int endAngle, Color c) {
         int[] octas = new int[8];
         fillOctas(octas, startAngle, endAngle);
 
         double radStartAngle = (float) startAngle / 180 * Math.PI;
         double radEndAngle = (float) endAngle / 180 * Math.PI;
-        int doubleASqr = 2 * width * width;
-        int doubleBSqr = 2 * height * height;
-        int x = width;
+        int doubleASqr = 2 * xRadius * xRadius;
+        int doubleBSqr = 2 * yRadius * yRadius;
+        int x = xRadius;
         int y = 0;
-        int xChg = height * height * (1 - 2 * width);
-        int yChg = width * width;
+        int xChg = yRadius * yRadius * (1 - 2 * xRadius);
+        int yChg = xRadius * xRadius;
         int error = 0;
-        int stopX = doubleBSqr * width;
+        int stopX = doubleBSqr * xRadius;
         int stopY = 0;
 
         while (stopX >= stopY) {
@@ -43,12 +43,12 @@ public class BresenhamArcDrawer implements ArcDrawer {
         }
 
         x = 0;
-        y = height;
-        xChg = height * height;
-        yChg = width * width * (1 - 2 * height);
+        y = yRadius;
+        xChg = yRadius * yRadius;
+        yChg = xRadius * xRadius * (1 - 2 * yRadius);
         error = 0;
         stopX = 0;
-        stopY = doubleASqr * height;
+        stopY = doubleASqr * yRadius;
 
         while (stopX <= stopY) {
             colorPixels(centerX, centerY, x, y, radStartAngle, radEndAngle, c, octas, 1);
