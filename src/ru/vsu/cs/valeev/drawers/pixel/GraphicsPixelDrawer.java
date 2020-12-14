@@ -1,10 +1,8 @@
 package ru.vsu.cs.valeev.drawers.pixel;
 
-import ru.vsu.cs.valeev.drawers.pixel.PixelDrawer;
-
 import java.awt.*;
 
-public class GraphicsPixelDrawer implements PixelDrawer {
+public class GraphicsPixelDrawer implements PixelDrawer{
     private Graphics g;
 
     public GraphicsPixelDrawer(Graphics g) {

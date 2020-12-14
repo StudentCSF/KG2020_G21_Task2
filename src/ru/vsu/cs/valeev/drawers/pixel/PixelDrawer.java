@@ -4,5 +4,8 @@ import java.awt.*;
 
 public interface PixelDrawer {
     void colorPixel(int x, int y, Color c);
-    void colorPixel(int x, int y);
+
+    default void colorPixel(int x, int y) {
+        colorPixel(x, y, Color.BLACK);
+    }
 }

@@ -4,6 +4,7 @@ import ru.vsu.cs.valeev.drawers.line.LineDrawer;
 import ru.vsu.cs.valeev.drawers.pixel.PixelDrawer;
 
 import java.awt.*;
+import java.util.Arrays;
 
 public class BresenhamPieDrawer implements ArcDrawer {
     private PixelDrawer pd;
@@ -110,6 +111,9 @@ public class BresenhamPieDrawer implements ArcDrawer {
         if (octas[i] == 2) colorPixel(rx, ry, c, -1, pts, minax);
         else if (octas[i] == 1) {
             angle = -1 * Math.atan2(-dy, dx);
+//            System.out.println(-dy + " " + rx);
+//            System.out.println(sa + " " + angle + " " + ea);
+//            System.out.println(0.17453292649980456 <= 0.017542060057402487);
             if (angle >= sa && angle <= ea) {
                 colorPixel(rx, ry, c, angle, pts, minax);
             }

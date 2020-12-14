@@ -1,13 +1,14 @@
 package ru.vsu.cs.valeev;
 
-import ru.vsu.cs.valeev.drawers.arc.ArcDrawer;
-import ru.vsu.cs.valeev.drawers.arc.BresenhamArcDrawer;
-import ru.vsu.cs.valeev.drawers.arc.GraphicsArcDrawer;
+import ru.vsu.cs.kg2020.nuzhnykh_a_v.task2.PieDrawer;
+import ru.vsu.cs.kg2020.nuzhnykh_a_v.task2.testing.TestArcs;
+import ru.vsu.cs.valeev.drawers.arc.*;
 import ru.vsu.cs.valeev.drawers.line.BresenhamLineDrawer;
-import ru.vsu.cs.valeev.drawers.arc.BresenhamPieDrawer;
 import ru.vsu.cs.valeev.drawers.line.LineDrawer;
 import ru.vsu.cs.valeev.drawers.pixel.GraphicsPixelDrawer;
 import ru.vsu.cs.valeev.drawers.pixel.PixelDrawer;
+import ru.vsu.cs.valeev.test.MyFactoryImplementation;
+import ru.vsu.cs.valeev.test.PieDrawerImpl;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,6 +23,11 @@ public class DrawPanel extends JPanel implements MouseMotionListener {
 
     public DrawPanel() {
         this.addMouseMotionListener(this);
+//        try {
+//            TestArcs.startTest(new MyFactoryImplementation(), true, "D:\\Учёба\\КГ\\KG2020_G21_Task2\\results");
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
     @Override
@@ -42,18 +48,20 @@ public class DrawPanel extends JPanel implements MouseMotionListener {
 //        drawAll(ld);
 //        ArcDrawer adf = new GraphicsArcFiller(gr);
         ArcDrawer add = new GraphicsArcDrawer(gr);
+//        add.draw(500, 500, 100, 100, 130, 457);
+//        gr.drawArc(300, 300, 100, 100, 130, 377);
         ArcDrawer adb = new BresenhamArcDrawer(pd);
         ArcDrawer adp = new BresenhamPieDrawer(pd, ld);
-//        adb.drawArc(300, 300, 100, 100, 180, 190);
-//        adb.draw(500, 300, 400, 100, 350, 360);
-
+//        adb.draw(300, 300, 100, 100, 180, 190);
+        adp.draw(300, 300, 100, 100, 10, 11);
+        new PieDrawerImpl((BresenhamPieDrawer) adp).drawPie(400, 200, 200, 200, 10 * Math.PI / 180, Math.PI / 180, Color.BLACK);
         /**
          * tests below, launch only any one, else will be kasha
          */
 
 //        testQuarters(adb);
 //        testAlmostCircles(adp);
-        testMiniPies(adp);
+//        testMiniPies(adp);
 
 
 
