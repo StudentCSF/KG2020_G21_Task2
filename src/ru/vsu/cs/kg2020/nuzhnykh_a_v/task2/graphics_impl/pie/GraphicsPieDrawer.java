@@ -15,7 +15,7 @@ public class GraphicsPieDrawer implements PieDrawer {
 
     @Override
     public void drawPie(int x, int y, int width, int height, double startAngle, double arcAngle, Color c) {
-        Arc2D arc = new Arc2D.Double(x, y, width, height, startAngle, arcAngle, Arc2D.PIE);
+        Arc2D arc = new Arc2D.Double(x, y, width, height, startAngle*180/Math.PI, arcAngle*180/Math.PI, Arc2D.PIE);
         gp.getGraphics().setColor(c);
         gp.getGraphics().draw(arc);
     }

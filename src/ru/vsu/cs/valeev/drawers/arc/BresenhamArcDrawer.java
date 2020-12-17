@@ -66,16 +66,20 @@ public class BresenhamArcDrawer implements ArcDrawer {
     }
 
     private void fillOctas(int[] octas, int s, int e) {
+        int i = 0;
         int p1 = 0, p2 = 45;
-        int step = 45;
-        for (int i = 0; i < octas.length; i++, p1 += step, p2 += step) {
-            if (p1 - 1 >= s && p2 + 1 <= e) octas[i] = 2;
-            else if (p2 <= s || p1 >= e) octas[i] = 0;
-            else octas[i] = 1;
+        while (p1 < e) {
+            int index = i % 8;
+            if (p2 <= s) {
+            } else if (p1 - 1 >= s && p2 + 1 <= e) octas[index] = -1;
+            else octas[index] = i / 8 + 1;
+            i++;
+            p1 += 45;
+            p2 += 45;
         }
     }
 
-    private void colorPixels(final int cx, final int cy, final int dx, final int dy, final double sa, final double ea, Color c, int[] octas, int i) {
+    private void colorPixels2(final int cx, final int cy, final int dx, final int dy, final double sa, final double ea, Color c, int[] octas, int i) {
         double angle;
 
         int rx = cx + dx;
@@ -109,6 +113,46 @@ public class BresenhamArcDrawer implements ArcDrawer {
         if (octas[4 + i] == 2) pd.colorPixel(rx, ry, c);
         else if (octas[4 + i] == 1) {
             angle = Math.atan2(dx, -dy) + 0.5 * Math.PI;
+            if (angle >= sa && angle <= ea) pd.colorPixel(rx, ry, c);
+        }
+    }
+
+    private void colorPixels(final int cx, final int cy, final int dx, final int dy, final double sa, final double ea, Color c, int[] octas, int i) {
+        double angle;
+        int adda;
+
+        int rx = cx + dx;
+        int ry = cy + dy;
+        if (octas[7 - i] == -1) pd.colorPixel(rx, ry, c);
+        else if (octas[7 - i] > 0) {
+            adda = octas[7 - i] > 1 ? octas[7 - i] : 0;
+            angle = Math.atan2(dx, dy) + (1.5 + adda) * Math.PI;
+            if (angle >= sa && angle <= ea) pd.colorPixel(rx, ry, c);
+        }
+        rx = cx + dx;
+        ry = cy - dy;
+        if (octas[i] == -1) pd.colorPixel(rx, ry, c);
+        else if (octas[i] > 0) {
+            adda = octas[i] > 1 ? octas[i] : 0;
+            angle = -1 * Math.atan2(-dy, dx) + adda * Math.PI;
+             if (angle >= sa && angle <= ea) pd.colorPixel(rx, ry, c);
+        }
+
+        rx = cx - dx;
+        ry = cy - dy;
+        if (octas[3 - i] == -1) pd.colorPixel(rx, ry, c);
+        else if (octas[3 - i] > 0) {
+            adda = octas[3 - i] > 1 ? octas[3 - i] : 0;
+            angle = -1 * Math.atan2(-dy, -dx) + adda * Math.PI;
+            if (angle >= sa && angle <= ea) pd.colorPixel(rx, ry, c);
+        }
+
+        rx = cx - dx;
+        ry = cy + dy;
+        if (octas[4 + i] == -1) pd.colorPixel(rx, ry, c);
+        else if (octas[4 + i] > 0) {
+            adda = octas[4 + i] > 1 ? octas[4 + i] : 0;
+            angle = Math.atan2(dx, -dy) + (adda + 0.5) * Math.PI;
             if (angle >= sa && angle <= ea) pd.colorPixel(rx, ry, c);
         }
     }

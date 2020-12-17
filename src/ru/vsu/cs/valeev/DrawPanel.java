@@ -4,6 +4,8 @@ import ru.vsu.cs.kg2020.nuzhnykh_a_v.task2.PieDrawer;
 import ru.vsu.cs.kg2020.nuzhnykh_a_v.task2.testing.TestArcs;
 import ru.vsu.cs.valeev.drawers.arc.*;
 import ru.vsu.cs.valeev.drawers.line.BresenhamLineDrawer;
+import ru.vsu.cs.valeev.drawers.line.DDALineDrawer;
+import ru.vsu.cs.valeev.drawers.line.GraphicsLineDrawer;
 import ru.vsu.cs.valeev.drawers.line.LineDrawer;
 import ru.vsu.cs.valeev.drawers.pixel.GraphicsPixelDrawer;
 import ru.vsu.cs.valeev.drawers.pixel.PixelDrawer;
@@ -14,6 +16,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+import java.awt.geom.Arc2D;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.util.Random;
@@ -23,17 +26,17 @@ public class DrawPanel extends JPanel implements MouseMotionListener {
 
     public DrawPanel() {
         this.addMouseMotionListener(this);
-//        try {
-//            TestArcs.startTest(new MyFactoryImplementation(), true, "D:\\Учёба\\КГ\\KG2020_G21_Task2\\results");
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+        try {
+            TestArcs.startTest(new MyFactoryImplementation(), TestArcs.IMG_DIFF, TestArcs.TEST_ARC, true, "D:\\Учёба\\КГ\\KG2020_G21_Task2\\results");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void paint(Graphics g) {
         BufferedImage bi = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
-        Graphics gr = bi.createGraphics();
+        Graphics2D gr = bi.createGraphics();
         gr.setColor(Color.WHITE);
         gr.fillRect(0, 0, getWidth(), getHeight());
         gr.setColor(Color.BLACK);
@@ -41,8 +44,8 @@ public class DrawPanel extends JPanel implements MouseMotionListener {
         PixelDrawer pd = new GraphicsPixelDrawer(gr);
 
 //        LineDrawer ld = new GraphicsLineDrawer(gr);
-//        LineDrawer ld = new DDALineDrawer(pd);
-        LineDrawer ld = new BresenhamLineDrawer(pd);
+        LineDrawer ld = new DDALineDrawer(pd);
+//        LineDrawer ld = new BresenhamLineDrawer(pd);
 //        LineDrawer ld = new MyBresenhamLineDrawer(pd);
 //        LineDrawer ld = new WuLineDrawer(pd);
 //        drawAll(ld);
@@ -53,16 +56,30 @@ public class DrawPanel extends JPanel implements MouseMotionListener {
         ArcDrawer adb = new BresenhamArcDrawer(pd);
         ArcDrawer adp = new BresenhamPieDrawer(pd, ld);
 //        adb.draw(300, 300, 100, 100, 180, 190);
-        adp.draw(300, 300, 100, 100, 10, 11);
-        new PieDrawerImpl((BresenhamPieDrawer) adp).drawPie(400, 200, 200, 200, 10 * Math.PI / 180, Math.PI / 180, Color.BLACK);
-        /**
-         * tests below, launch only any one, else will be kasha
-         */
+//        adb.draw(300, 300, 300, 100, 0, 360, Color.GREEN);
+//        adb.draw(300, 300, 200, 50, 0, 36, Color.RED);
+//        adp.draw(300, 300, 200, 50, 10, 11, Color.RED);
+//        adp.draw(300, 300, 200, 50, 36, 72, Color.RED);
+//        adp.draw(300, 300, 200, 50, 72, 108, Color.RED);
+//        adp.draw(300, 300, 200, 50, 108, 144, Color.RED);
+//        adp.draw(300, 300, 200, 50, 144, 180, Color.RED);
+//        adp.draw(300, 300, 200, 50, 180, 216, Color.RED);
+//        adp.draw(300, 300, 200, 50, 216, 252, Color.RED);
+//        adp.draw(300, 300, 200, 50, 252, 288, Color.RED);
+//        adp.draw(300, 300, 200, 50, 288, 324, Color.RED);
+//        adp.draw(300, 300, 200, 50, 324, 360, Color.RED);
+//        adp.draw(300, 300, 200, 50, 162, 190, Color.GREEN);
+//        adb.draw(300, 300, 200, 50, 72, 108, Color.RED);
+//        adb.draw(300, 300, 200, 50, 108, 144, Color.RED);
+//        adb.draw(300, 300, 200, 50, 144, 180, Color.RED);
+//        adp.draw(300, 300, 200, 50, 0, 180, Color.GREEN);
+//        new PieDrawerImpl((BresenhamPieDrawer) adp).drawPie(400, 200, 200, 200, 10 * Math.PI / 180, Math.PI / 180, Color.BLACK);
 
 //        testQuarters(adb);
 //        testAlmostCircles(adp);
 //        testMiniPies(adp);
-
+//        Arc2D arc2D = new Arc2D.Double(200, 200, 200, 200, 60, 70, Arc2D.PIE);
+//        gr.draw(arc2D);
 
 
 //        adp.draw(300, 300, 100, 100, 315, 360);
