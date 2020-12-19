@@ -4,6 +4,7 @@ import ru.vsu.cs.valeev.drawers.line.LineDrawer;
 import ru.vsu.cs.valeev.drawers.pixel.PixelDrawer;
 
 import java.awt.*;
+import java.util.Arrays;
 
 public class BresenhamPieDrawer implements ArcDrawer {
     private PixelDrawer pd;
@@ -58,7 +59,6 @@ public class BresenhamPieDrawer implements ArcDrawer {
         };
         double[] minax = new double[]{Double.MAX_VALUE, Double.MIN_VALUE};
 
-
         int[] octants = new int[8];
         setOctants(octants, startAngle, endAngle);
 
@@ -110,7 +110,8 @@ public class BresenhamPieDrawer implements ArcDrawer {
                 yChg += doubleASqr;
             }
         }
-        if (pts[0][0] == -1 && pts[1][0] != -1) {
+        if (pts[0][0] == -1 && pts[1][0] == -1) return;
+        else if (pts[0][0] == -1 && pts[1][0] != -1) {
             pts[0][0] = pts[1][0];
             pts[0][1] = pts[1][1];
         } else if (pts[1][0] == -1 && pts[0][0] != -1) {
@@ -139,14 +140,14 @@ public class BresenhamPieDrawer implements ArcDrawer {
 
     private void colorPixels(final int cx, final int cy, final int dx, final int dy, final double sa, final double ea, Color c, int[][] pts, double[] minax, int[] octas, int i, int[] alonePoint, double[] arctg) {
         double angle;
-        int adda;
+        double angle2;
 
         int rx = cx + dx;
         int ry = cy + dy;
         if (octas[7 - i] == -1) colorPixel(rx, ry, c, -1, pts, minax);
         else if (octas[7 - i] > 0) {
-            adda = octas[7 - i] > 1 ? octas[7 - i] : 0;
-            angle = Math.atan2(dx, dy) + (1.5 + adda) * Math.PI;
+            angle = Math.atan2(dx, dy) + 1.5 * Math.PI;
+            angle2 = angle + 2 * Math.PI - Math.PI / 180;
             if (alonePoint != null) {
                 double diff = angle - sa;
                 if (Math.abs(arctg[0]) > Math.abs(diff)) {
@@ -155,13 +156,14 @@ public class BresenhamPieDrawer implements ArcDrawer {
                     alonePoint[1] = ry;
                 }
             } else if (angle >= sa && angle <= ea) colorPixel(rx, ry, c, angle, pts, minax);
+            else if (angle2 >= sa && angle2 <= ea) colorPixel(rx, ry, c, angle2, pts, minax);
         }
         rx = cx + dx;
         ry = cy - dy;
         if (octas[i] == -1) colorPixel(rx, ry, c, -1, pts, minax);
         else if (octas[i] > 0) {
-            adda = octas[i] > 1 ? octas[i] : 0;
-            angle = -1 * Math.atan2(-dy, dx) + adda * Math.PI;
+            angle = -1 * Math.atan2(-dy, dx);
+            angle2 = angle + 2 * Math.PI - Math.PI / 180;
             if (alonePoint != null) {
                 double diff = angle - sa;
                 if (Math.abs(arctg[0]) > Math.abs(diff)) {
@@ -171,15 +173,18 @@ public class BresenhamPieDrawer implements ArcDrawer {
                 }
             } else if (angle >= sa && angle <= ea) {
                 colorPixel(rx, ry, c, angle, pts, minax);
-            }
+            } else if (angle2 >= sa && angle2 <= ea) colorPixel(rx, ry, c, angle2, pts, minax);
         }
 
         rx = cx - dx;
         ry = cy - dy;
         if (octas[3 - i] == -1) colorPixel(rx, ry, c, -1, pts, minax);
         else if (octas[3 - i] > 0) {
-            adda = octas[3 - i] > 1 ? octas[3 - i] : 0;
-            angle = -1 * Math.atan2(-dy, -dx) + adda * Math.PI;
+            angle = -1 * Math.atan2(-dy, -dx);
+            angle2 = angle + 2 * Math.PI - Math.PI / 180;
+            if (angle < 0 || angle % Math.PI == 0) {
+                while (angle < sa) angle += 2 * Math.PI;
+            }
             if (alonePoint != null) {
                 double diff = angle - sa;
                 if (Math.abs(arctg[0]) > Math.abs(diff)) {
@@ -188,14 +193,15 @@ public class BresenhamPieDrawer implements ArcDrawer {
                     alonePoint[1] = ry;
                 }
             } else if (angle >= sa && angle <= ea) colorPixel(rx, ry, c, angle, pts, minax);
+            else if (angle2 >= sa && angle2 <= ea) colorPixel(rx, ry, c, angle2, pts, minax);
         }
 
         rx = cx - dx;
         ry = cy + dy;
         if (octas[4 + i] == -1) colorPixel(rx, ry, c, -1, pts, minax);
         else if (octas[4 + i] > 0) {
-            adda = octas[4 + i] > 1 ? octas[4 + i] : 0;
-            angle = Math.atan2(dx, -dy) + (adda + 0.5) * Math.PI;
+            angle = Math.atan2(dx, -dy) + 0.5 * Math.PI;
+            angle2 = angle + 2 * Math.PI - Math.PI / 180;
             if (alonePoint != null) {
                 double diff = angle - sa;
                 if (Math.abs(arctg[0]) > Math.abs(diff)) {
@@ -204,6 +210,7 @@ public class BresenhamPieDrawer implements ArcDrawer {
                     alonePoint[1] = ry;
                 }
             } else if (angle >= sa && angle <= ea) colorPixel(rx, ry, c, angle, pts, minax);
+            else if (angle2 >= sa && angle2 <= ea) colorPixel(rx, ry, c, angle2, pts, minax);
         }
     }
 

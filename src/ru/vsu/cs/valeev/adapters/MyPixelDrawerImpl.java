@@ -1,4 +1,4 @@
-package ru.vsu.cs.valeev.test;
+package ru.vsu.cs.valeev.adapters;
 
 import ru.vsu.cs.kg2020.nuzhnykh_a_v.task2.PixelDrawer;
 

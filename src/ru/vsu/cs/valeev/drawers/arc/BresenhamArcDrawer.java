@@ -13,6 +13,7 @@ public class BresenhamArcDrawer implements ArcDrawer {
 
     @Override
     public void draw(int centerX, int centerY, int xRadius, int yRadius, int startAngle, int endAngle, Color c) {
+        if (endAngle - startAngle == 0) return;
         int[] octas = new int[8];
         fillOctas(octas, startAngle, endAngle);
 
@@ -79,81 +80,50 @@ public class BresenhamArcDrawer implements ArcDrawer {
         }
     }
 
-    private void colorPixels2(final int cx, final int cy, final int dx, final int dy, final double sa, final double ea, Color c, int[] octas, int i) {
-        double angle;
-
-        int rx = cx + dx;
-        int ry = cy + dy;
-        if (octas[7 - i] == 2) pd.colorPixel(rx, ry, c);
-        else if (octas[7 - i] == 1) {
-            angle = Math.atan2(dx, dy) + 1.5 * Math.PI;
-            if (angle >= sa && angle <= ea) pd.colorPixel(rx, ry, c);
-        }
-
-        rx = cx + dx;
-        ry = cy - dy;
-        if (octas[i] == 2) pd.colorPixel(rx, ry, c);
-        else if (octas[i] == 1) {
-            angle = -1 * Math.atan2(-dy, dx);
-            if (angle >= sa && angle <= ea) {
-                pd.colorPixel(rx, ry, c);
-            }
-        }
-
-        rx = cx - dx;
-        ry = cy - dy;
-        if (octas[3 - i] == 2) pd.colorPixel(rx, ry, c);
-        else if (octas[3 - i] == 1) {
-            angle = -1 * Math.atan2(-dy, -dx);
-            if (angle >= sa && angle <= ea) pd.colorPixel(rx, ry, c);
-        }
-
-        rx = cx - dx;
-        ry = cy + dy;
-        if (octas[4 + i] == 2) pd.colorPixel(rx, ry, c);
-        else if (octas[4 + i] == 1) {
-            angle = Math.atan2(dx, -dy) + 0.5 * Math.PI;
-            if (angle >= sa && angle <= ea) pd.colorPixel(rx, ry, c);
-        }
-    }
-
     private void colorPixels(final int cx, final int cy, final int dx, final int dy, final double sa, final double ea, Color c, int[] octas, int i) {
         double angle;
-        int adda;
+        double angle2;
 
         int rx = cx + dx;
         int ry = cy + dy;
         if (octas[7 - i] == -1) pd.colorPixel(rx, ry, c);
         else if (octas[7 - i] > 0) {
-            adda = octas[7 - i] > 1 ? octas[7 - i] : 0;
-            angle = Math.atan2(dx, dy) + (1.5 + adda) * Math.PI;
+            angle = Math.atan2(dx, dy) + 1.5 * Math.PI;
+            angle2 = angle + 2 * Math.PI - Math.PI / 180;
             if (angle >= sa && angle <= ea) pd.colorPixel(rx, ry, c);
+            else if (angle2 >= sa && angle2 <= ea) pd.colorPixel(rx, ry, c);
         }
         rx = cx + dx;
         ry = cy - dy;
         if (octas[i] == -1) pd.colorPixel(rx, ry, c);
         else if (octas[i] > 0) {
-            adda = octas[i] > 1 ? octas[i] : 0;
-            angle = -1 * Math.atan2(-dy, dx) + adda * Math.PI;
+            angle = -1 * Math.atan2(-dy, dx);
+            angle2 = angle + 2 * Math.PI - Math.PI / 180;
              if (angle >= sa && angle <= ea) pd.colorPixel(rx, ry, c);
+             else if (angle2 >= sa && angle2 <= ea) pd.colorPixel(rx, ry, c);
         }
 
         rx = cx - dx;
         ry = cy - dy;
         if (octas[3 - i] == -1) pd.colorPixel(rx, ry, c);
         else if (octas[3 - i] > 0) {
-            adda = octas[3 - i] > 1 ? octas[3 - i] : 0;
-            angle = -1 * Math.atan2(-dy, -dx) + adda * Math.PI;
+            angle = -1 * Math.atan2(-dy, -dx);
+            angle2 = angle + 2 * Math.PI - Math.PI / 180;
+            if (angle < 0 || angle % Math.PI == 0) {
+                while (angle < sa) angle += 2 * Math.PI;
+            }
             if (angle >= sa && angle <= ea) pd.colorPixel(rx, ry, c);
+            else if (angle2 >= sa && angle2 <= ea) pd.colorPixel(rx, ry, c);
         }
 
         rx = cx - dx;
         ry = cy + dy;
         if (octas[4 + i] == -1) pd.colorPixel(rx, ry, c);
         else if (octas[4 + i] > 0) {
-            adda = octas[4 + i] > 1 ? octas[4 + i] : 0;
-            angle = Math.atan2(dx, -dy) + (adda + 0.5) * Math.PI;
+            angle = Math.atan2(dx, -dy) + 0.5 * Math.PI;
+            angle2 = angle + 2 * Math.PI - Math.PI / 180;
             if (angle >= sa && angle <= ea) pd.colorPixel(rx, ry, c);
+            else if (angle2 >= sa && angle2 <= ea) pd.colorPixel(rx, ry, c);
         }
     }
 }

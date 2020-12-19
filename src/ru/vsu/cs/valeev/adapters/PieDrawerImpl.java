@@ -1,4 +1,4 @@
-package ru.vsu.cs.valeev.test;
+package ru.vsu.cs.valeev.adapters;
 
 import ru.vsu.cs.kg2020.nuzhnykh_a_v.task2.PieDrawer;
 import ru.vsu.cs.valeev.drawers.arc.BresenhamPieDrawer;
@@ -19,6 +19,6 @@ public class PieDrawerImpl implements PieDrawer {
         double aStart = 180 * startAngle / Math.PI;
         double aArc = 180 * arcAngle/ Math.PI;
         double aEnd = aStart + aArc;
-        bpd.draw(centerX, centerY, width / 2, height / 2, (int)aStart, (int)aEnd, c);
+        bpd.draw(centerX, centerY, width / 2, height / 2, (int)Math.round(aStart), (int)Math.round(aEnd), c);
     }
 }
