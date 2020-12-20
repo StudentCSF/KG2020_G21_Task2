@@ -15,28 +15,9 @@ public class BresenhamPieDrawer implements ArcDrawer {
         this.ld = ld;
     }
 
-    private int[] specialCase(int x, int y, int xr, int yr, int angle, Color c) {
-        if (angle % 360 == 0) {
-            ld.drawLine(x, y, x + xr, y, c);
-            return null;
-        } else if (angle % 270 == 0) {
-            ld.drawLine(x, y, x, y + yr, c);
-            return null;
-        } else if (angle % 180 == 0) {
-            ld.drawLine(x, y, x - xr, y, c);
-            return null;
-        } else if (angle % 90 == 0) {
-            ld.drawLine(x, y, x, y - yr, c);
-            return null;
-        }
-        return new int[2];
-    }
-
-
     @Override
     public void draw(int centerX, int centerY, int xRadius, int yRadius, int startAngle, int endAngle, Color c) {
         int[] alonePoint = null;
-        double[] arcTgAlonePoint = new double[]{Double.MAX_VALUE};
         if (startAngle - endAngle == 0) {
             alonePoint = specialCase(centerX, centerY, xRadius, yRadius, startAngle, c);
             if (alonePoint == null) return;
@@ -53,17 +34,17 @@ public class BresenhamPieDrawer implements ArcDrawer {
             endAngle = tmp;
         }
 
+        int[] minax = new int[]{Integer.MAX_VALUE, Integer.MIN_VALUE};
         int[][] pts = new int[][]{
                 {-1, -1},
                 {-1, -1}
         };
-        double[] minax = new double[]{Double.MAX_VALUE, Double.MIN_VALUE};
+        if (startAngle % 90 == 0 && endAngle % 90 != 0 || endAngle % 90 == 0 && startAngle % 90 != 0)
+            specialCase(pts, startAngle, endAngle, centerX, centerY, xRadius, yRadius);
 
         int[] octants = new int[8];
-        setOctants(octants, startAngle, endAngle);
-
-        double radStartAngle = (float) startAngle / 180 * Math.PI;
-        double radEndAngle = (float) endAngle / 180 * Math.PI;
+        if (alonePoint != null) octants[startAngle / 45] = 1;
+        else setOctants(octants, startAngle, endAngle);
 
         int doubleASqr = 2 * xRadius * xRadius;
         int doubleBSqr = 2 * yRadius * yRadius;
@@ -76,7 +57,7 @@ public class BresenhamPieDrawer implements ArcDrawer {
         int stopY = 0;
 
         while (stopX >= stopY) {
-            colorPixels(centerX, centerY, x, y, radStartAngle, radEndAngle, c, pts, minax, octants, 0, alonePoint, arcTgAlonePoint);
+            colorPixels(centerX, centerY, x, y, startAngle, endAngle, c, pts, octants, 0, alonePoint, minax);
             y++;
             stopY += doubleASqr;
             error += yChg;
@@ -98,7 +79,7 @@ public class BresenhamPieDrawer implements ArcDrawer {
         stopY = doubleASqr * yRadius;
 
         while (stopX <= stopY) {
-            colorPixels(centerX, centerY, x, y, radStartAngle, radEndAngle, c, pts, minax, octants, 1, alonePoint, arcTgAlonePoint);
+            colorPixels(centerX, centerY, x, y, startAngle, endAngle, c, pts, octants, 1, alonePoint, minax);
             x++;
             stopX += doubleBSqr;
             error += xChg;
@@ -110,18 +91,94 @@ public class BresenhamPieDrawer implements ArcDrawer {
                 yChg += doubleASqr;
             }
         }
-        if (pts[0][0] == -1 && pts[1][0] == -1) return;
-        else if (pts[0][0] == -1 && pts[1][0] != -1) {
+        if (pts[0][0] == -1 && pts[1][0] == -1) {
+            if (alonePoint == null) {
+                specialCase(centerX, centerY, xRadius, yRadius, startAngle, c);
+                specialCase(centerX, centerY, xRadius, yRadius, endAngle, c);
+            } else {
+                ld.drawLine(centerX, centerY, alonePoint[0], alonePoint[1], c);
+            }
+            return;
+        } else if (pts[0][0] == -1 && pts[1][0] != -1) {
             pts[0][0] = pts[1][0];
             pts[0][1] = pts[1][1];
         } else if (pts[1][0] == -1 && pts[0][0] != -1) {
             pts[1][0] = pts[0][0];
             pts[1][1] = pts[0][1];
         }
-        if (alonePoint == null) {
-            ld.drawLine(centerX, centerY, pts[0][0], pts[0][1]);
-            ld.drawLine(centerX, centerY, pts[1][0], pts[1][1]);
-        } else ld.drawLine(centerX, centerY, alonePoint[0], alonePoint[1], c);
+        if ((endAngle - endAngle / 360) == 180) {
+            pts[1][0] = centerX - xRadius;
+            pts[1][1] = centerY;
+        }
+        ld.drawLine(centerX, centerY, pts[0][0], pts[0][1], c);
+        ld.drawLine(centerX, centerY, pts[1][0], pts[1][1], c);
+    }
+
+    private void colorPixels(final int cx, final int cy, final int dx, final int dy, final int sa, final int ea, Color c, int[][] pts, int[] octas, int i, int[] alonePoint, int[] minax) {
+        int angle;
+        int angle2;
+
+        int rx = cx + dx;
+        int ry = cy + dy;
+        if (octas[7 - i] == -1) colorPixel(rx, ry, c, -1, pts, minax, 7 - i);
+        else if (octas[7 - i] > 0) {
+            angle = toGradus(Math.atan2(dx, dy)) + 270;
+            angle2 = angle + 360;
+            if (alonePoint != null) {
+                if (angle - sa == 0) {
+                    alonePoint[0] = rx;
+                    alonePoint[1] = ry;
+                }
+            } else if (angle >= sa && angle <= ea) colorPixel(rx, ry, c, angle, pts, minax, 7 - i);
+            else if (angle2 >= sa && angle2 <= ea) colorPixel(rx, ry, c, angle2, pts, minax, 7 - i);
+        }
+        rx = cx + dx;
+        ry = cy - dy;
+        if (octas[i] == -1) colorPixel(rx, ry, c, -1, pts, minax, i);
+        else if (octas[i] > 0) {
+            angle = toGradus(-1 * Math.atan2(-dy, dx));
+            angle2 = angle + 360;
+            if (alonePoint != null) {
+                if (angle - sa == 0) {
+                    alonePoint[0] = rx;
+                    alonePoint[1] = ry;
+                }
+            } else if (angle >= sa && angle <= ea) colorPixel(rx, ry, c, angle, pts, minax, i);
+            else if (angle2 >= sa && angle2 <= ea) colorPixel(rx, ry, c, angle2, pts, minax, i);
+        }
+
+        rx = cx - dx;
+        ry = cy - dy;
+        if (octas[3 - i] == -1) colorPixel(rx, ry, c, -1, pts, minax, 3 - i);
+        else if (octas[3 - i] > 0) {
+            angle = toGradus(-1 * Math.atan2(-dy, -dx));
+            angle2 = angle + 360;
+            if (angle < 0 || angle % Math.PI == 0) {
+                while (angle < sa) angle += 2 * Math.PI;
+            }
+            if (alonePoint != null) {
+                if (angle - sa == 0) {
+                    alonePoint[0] = rx;
+                    alonePoint[1] = ry;
+                }
+            } else if (angle >= sa && angle <= ea) colorPixel(rx, ry, c, angle, pts, minax, 3 - i);
+            else if (angle2 >= sa && angle2 <= ea) colorPixel(rx, ry, c, angle2, pts, minax, 3 - i);
+        }
+
+        rx = cx - dx;
+        ry = cy + dy;
+        if (octas[4 + i] == -1) colorPixel(rx, ry, c, -1, pts, minax, 4 + i);
+        else if (octas[4 + i] > 0) {
+            angle = toGradus(Math.atan2(dx, -dy)) + 90;
+            angle2 = angle + 360;
+            if (alonePoint != null) {
+                if (angle - sa == 0) {
+                    alonePoint[0] = rx;
+                    alonePoint[1] = ry;
+                }
+            } else if (angle >= sa && angle <= ea) colorPixel(rx, ry, c, angle, pts, minax, 4 + i);
+            else if (angle2 >= sa && angle2 <= ea) colorPixel(rx, ry, c, angle2, pts, minax, 4 + i);
+        }
     }
 
     private void setOctants(int[] octas, int s, int e) {
@@ -130,7 +187,7 @@ public class BresenhamPieDrawer implements ArcDrawer {
         while (p1 < e) {
             int index = i % 8;
             if (p2 <= s) {
-            } else if (p1 - 1 >= s && p2 + 1 <= e) octas[index] = -1;
+            } else if (p1 > s && p2 < e) octas[index] = -1;
             else octas[index] = i / 8 + 1;
             i++;
             p1 += 45;
@@ -138,94 +195,78 @@ public class BresenhamPieDrawer implements ArcDrawer {
         }
     }
 
-    private void colorPixels(final int cx, final int cy, final int dx, final int dy, final double sa, final double ea, Color c, int[][] pts, double[] minax, int[] octas, int i, int[] alonePoint, double[] arctg) {
-        double angle;
-        double angle2;
-
-        int rx = cx + dx;
-        int ry = cy + dy;
-        if (octas[7 - i] == -1) colorPixel(rx, ry, c, -1, pts, minax);
-        else if (octas[7 - i] > 0) {
-            angle = Math.atan2(dx, dy) + 1.5 * Math.PI;
-            angle2 = angle + 2 * Math.PI - Math.PI / 180;
-            if (alonePoint != null) {
-                double diff = angle - sa;
-                if (Math.abs(arctg[0]) > Math.abs(diff)) {
-                    arctg[0] = diff;
-                    alonePoint[0] = rx;
-                    alonePoint[1] = ry;
-                }
-            } else if (angle >= sa && angle <= ea) colorPixel(rx, ry, c, angle, pts, minax);
-            else if (angle2 >= sa && angle2 <= ea) colorPixel(rx, ry, c, angle2, pts, minax);
-        }
-        rx = cx + dx;
-        ry = cy - dy;
-        if (octas[i] == -1) colorPixel(rx, ry, c, -1, pts, minax);
-        else if (octas[i] > 0) {
-            angle = -1 * Math.atan2(-dy, dx);
-            angle2 = angle + 2 * Math.PI - Math.PI / 180;
-            if (alonePoint != null) {
-                double diff = angle - sa;
-                if (Math.abs(arctg[0]) > Math.abs(diff)) {
-                    arctg[0] = diff;
-                    alonePoint[0] = rx;
-                    alonePoint[1] = ry;
-                }
-            } else if (angle >= sa && angle <= ea) {
-                colorPixel(rx, ry, c, angle, pts, minax);
-            } else if (angle2 >= sa && angle2 <= ea) colorPixel(rx, ry, c, angle2, pts, minax);
-        }
-
-        rx = cx - dx;
-        ry = cy - dy;
-        if (octas[3 - i] == -1) colorPixel(rx, ry, c, -1, pts, minax);
-        else if (octas[3 - i] > 0) {
-            angle = -1 * Math.atan2(-dy, -dx);
-            angle2 = angle + 2 * Math.PI - Math.PI / 180;
-            if (angle < 0 || angle % Math.PI == 0) {
-                while (angle < sa) angle += 2 * Math.PI;
-            }
-            if (alonePoint != null) {
-                double diff = angle - sa;
-                if (Math.abs(arctg[0]) > Math.abs(diff)) {
-                    arctg[0] = diff;
-                    alonePoint[0] = rx;
-                    alonePoint[1] = ry;
-                }
-            } else if (angle >= sa && angle <= ea) colorPixel(rx, ry, c, angle, pts, minax);
-            else if (angle2 >= sa && angle2 <= ea) colorPixel(rx, ry, c, angle2, pts, minax);
-        }
-
-        rx = cx - dx;
-        ry = cy + dy;
-        if (octas[4 + i] == -1) colorPixel(rx, ry, c, -1, pts, minax);
-        else if (octas[4 + i] > 0) {
-            angle = Math.atan2(dx, -dy) + 0.5 * Math.PI;
-            angle2 = angle + 2 * Math.PI - Math.PI / 180;
-            if (alonePoint != null) {
-                double diff = angle - sa;
-                if (Math.abs(arctg[0]) > Math.abs(diff)) {
-                    arctg[0] = diff;
-                    alonePoint[0] = rx;
-                    alonePoint[1] = ry;
-                }
-            } else if (angle >= sa && angle <= ea) colorPixel(rx, ry, c, angle, pts, minax);
-            else if (angle2 >= sa && angle2 <= ea) colorPixel(rx, ry, c, angle2, pts, minax);
-        }
-    }
-
-    private void colorPixel(int x, int y, Color c, double angle, int[][] pts, double[] minax) {
+    private void colorPixel(int x, int y, Color c, int angle, int[][] pts, int[] minax, int i) {
         pd.colorPixel(x, y, c);
         if (angle != -1) {
-            if (angle < minax[0]) {
+            if (angle <= minax[0] && i % 2 == 1 || angle < minax[0] && i % 2 == 0) {
                 pts[0][0] = x;
                 pts[0][1] = y;
                 minax[0] = angle;
             }
-            if (angle > minax[1]) {
+            if (angle > minax[1] && i % 2 == 1 || i % 2 == 0 && angle >= minax[1]) {
                 pts[1][0] = x;
                 pts[1][1] = y;
                 minax[1] = angle;
+            }
+        }
+    }
+
+    private static final double GRADUS = 180 / Math.PI;
+
+    private int toGradus(double angle) {
+        return (int) Math.round(angle * GRADUS);
+    }
+
+    private int[] specialCase(int x, int y, int xr, int yr, int angle, Color c) {
+        while (angle > 360) angle -= 360;
+        if (angle % 360 == 0) {
+            ld.drawLine(x, y, x + xr, y, c);
+            return null;
+        } else if (angle % 270 == 0) {
+            ld.drawLine(x, y, x, y + yr, c);
+            return null;
+        } else if (angle % 180 == 0) {
+            ld.drawLine(x, y, x - xr, y, c);
+            return null;
+        } else if (angle % 90 == 0) {
+            ld.drawLine(x, y, x, y - yr, c);
+            return null;
+        }
+        return new int[2];
+    }
+
+    private void specialCase(int[][] pts, int s, int e, int cx, int cy, int xr, int yr) {
+        if (s % 90 == 0) {
+            int angle = s;
+            while (angle > 360) angle -= 360;
+            if (angle % 360 == 0) {
+                pts[0][0] = cx + xr;
+                pts[0][1] = cy;
+            } else if (angle % 270 == 0) {
+                pts[0][0] = cx;
+                pts[0][1] = cy + yr;
+            } else if (angle % 180 == 0) {
+                pts[0][0] = cx - xr;
+                pts[0][1] = cy;
+            } else {
+                pts[0][0] = cx;
+                pts[0][1] = cy - yr;
+            }
+        } else {
+            int angle = e;
+            while (angle > 360) angle -= 360;
+            if (angle % 360 == 0) {
+                pts[1][0] = cx + xr;
+                pts[1][1] = cy;
+            } else if (angle % 270 == 0) {
+                pts[1][0] = cx;
+                pts[1][1] = cy + yr;
+            } else if (angle % 180 == 0) {
+                pts[1][0] = cx - xr;
+                pts[1][1] = cy;
+            } else {
+                pts[1][0] = cx;
+                pts[1][1] = cy - yr;
             }
         }
     }

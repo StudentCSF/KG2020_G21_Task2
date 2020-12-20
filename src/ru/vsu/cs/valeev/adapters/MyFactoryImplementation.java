@@ -11,9 +11,7 @@ import ru.vsu.cs.kg2020.nuzhnykh_a_v.task2.graphics_impl.pie.PieFillerFactoryByP
 import ru.vsu.cs.valeev.drawers.arc.BresenhamArcDrawer;
 import ru.vsu.cs.valeev.drawers.arc.BresenhamPieDrawer;
 import ru.vsu.cs.valeev.drawers.arc.BresenhamPieFiller;
-import ru.vsu.cs.valeev.drawers.arc.SimpleArcDrawer;
 import ru.vsu.cs.valeev.drawers.line.BresenhamLineDrawer;
-import ru.vsu.cs.valeev.drawers.line.DDALineDrawer;
 
 public class MyFactoryImplementation extends PrimitivesFactoryWithDefaultGraphicsImplementation {
 
